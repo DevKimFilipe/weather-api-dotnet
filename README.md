@@ -14,3 +14,19 @@ Este projeto é um microserviço desenvolvido para consultar dados climáticos e
 
 ---
 *Construído por Kim Borges - Estudante de Engenharia de Software.*
+Projeto desenvolvido para fins de estudo de **Engenharia de Software**, focado em performance e consumo de APIs externas.
+
+## 🚀 Tecnologias
+- **.NET 8** (Minimal APIs)
+- **HttpClient Factory** (Gestão eficiente de recursos)
+- **Assincronia (async/await)** para I/O não bloqueante.
+- **Open-Meteo API** para dados climáticos reais.
+
+## 🛠️ Como rodar
+1. Certifique-se de ter o SDK do .NET 8 instalado.
+2. Clone o repositório.
+3. No terminal, execute: `dotnet run`.
+4. Acesse: `http://localhost:5168/clima/recife`.
+
+---
+*Desenvolvido por Kim Borges - Estudante de Engenharia de Software.*

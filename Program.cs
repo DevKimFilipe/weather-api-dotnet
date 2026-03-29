@@ -1,27 +1,33 @@
 var builder = WebApplication.CreateBuilder(args);
+
+// --- 1. CAMADA DE CONFIGURAÇÃO (BLINDAGEM) ---
+var config = builder.Configuration.GetSection("WeatherSettings");
+string apiKey = config["ApiKey"] ?? "Sem Chave";
+string baseUrl = config["BaseUrl"] ?? "https://api.open-meteo.com/v1/forecast";
+
+// --- 2. REGISTRO DE SERVIÇOS ---
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
-// Nossa lista de cidades estratégica
-var cidades = new[] { "Recife", "Sao Paulo", "Lisboa", "Berlim" };
-
-app.MapGet("/clima/{cidade}", (string cidade) =>
+// --- 3. ENDPOINT ESTRATÉGICO ---
+app.MapGet("/clima/recife", async (IHttpClientFactory clientFactory) =>
 {
-    // Lógica de Gestão de Riscos: Verificar se a cidade existe no nosso radar
-    if (!cidades.Contains(cidade, StringComparer.OrdinalIgnoreCase))
-    {
-        return Results.NotFound(new { mensagem = "Cidade fora da nossa cobertura de monitoramento." });
-    }
+    var client = clientFactory.CreateClient();
+    
+    // Montagem da URL usando a base do appsettings.json
+    string url = $"{baseUrl}?latitude=-8.05&longitude=-34.88&current=temperature_2m";
+    
+    var response = await client.GetFromJsonAsync<object>(url);
 
-    // Simulando dados (Em um cenário real, aqui faríamos o Fetch de uma API externa)
-    var previsao = new 
+    return new 
     {
-        Cidade = cidade,
-        Temperatura = Random.Shared.Next(15, 35), // Gera uma temperatura aleatória
-        Data = DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
-        Aviso = "Dados simulados para teste de performance .NET"
+        Cidade = "Recife",
+        Estado = "Pernambuco",
+        ChaveUtilizada = apiKey, // Prova técnica de que a leitura do JSON funcionou
+        DadosClimaticos = response,
+        Timestamp = DateTime.Now
     };
-
-    return Results.Ok(previsao);
 });
 
 app.Run();
